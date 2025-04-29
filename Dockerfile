@@ -1,21 +1,32 @@
-# Base image
+#Use the official Python runtime image
 FROM python:3.13-slim
-
-WORKDIR /app/
-
-# Set environment variables to prevent unwanted behaviors
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Install dependencies
-RUN pip install --upgrade pip
-
-# Copy project files to the container
+ 
+# Create the app directory
+RUN mkdir /app
+ 
+# Set the working directory inside the container
+WORKDIR /app
+ 
+# Set environment variables 
+# Prevents Python from writing pyc files to disk
+ENV PYTHONDONTWRITEBYTECODE=1
+#Prevents Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1 
+ 
+# Upgrade pip
+RUN pip install --upgrade pip 
+ 
+# Copy the Django project  and install dependencies
+COPY requirements.txt  /app/
+ 
+# run this command to install all dependencies 
+RUN pip install --no-cache-dir -r requirements.txt
+ 
+# Copy the Django project to the container
 COPY . /app/
+ 
+# Expose the Django port
+EXPOSE 8000
 
-# Install Python dependencies
-RUN pip install -r requirements.txt
-
-# Create non-root user
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
-USER appuser
+# Run Django’s development server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
