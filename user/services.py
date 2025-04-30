@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from user.models import User
+
 class UserService:
     """
     Service class for user-related operations.
@@ -14,7 +16,11 @@ class UserService:
         Create a new user.
         """
         user_serializer.is_valid(raise_exception=True)
-        user = user_serializer.save()
+        password = user_serializer.validated_data.pop('password')
+        user = User(**user_serializer.validated_data)
+        user.set_password(password)
+
+        user.save()
         return user
     
     def generate_token(self, user):
@@ -28,9 +34,3 @@ class UserService:
             'refresh': str(refresh)
         }
 
-
-    def authenticate_user(self, username, password):
-        user = authenticate(username=username, password=password)
-        if user is None:
-            raise ValueError("Invalid credentials")
-        return user

@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import action
 
 from user.models import User
-from user.serializer import UserSerializer, UserCreateSerializer, LoginSerializer
+from user.serializer import UserSerializer, UserCreateSerializer
 from user.services import UserService
 
 
@@ -19,8 +19,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return UserCreateSerializer
-        if self.action == 'login':
-            return LoginSerializer
+   
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -30,9 +29,9 @@ class UserViewSet(viewsets.ModelViewSet):
         - list/retrieve: autenticado
         - demais (update, destroy): admin
         """
-        if self.action in ['create', 'login']:
+        if self.action in ['create', 'login', 'list']:
             perms = [AllowAny]
-        elif self.action in ['list', 'retrieve']:
+        elif self.action in [ 'retrieve']:
             perms = [IsAuthenticated]
         else:
             perms = [IsAdminUser]
@@ -41,36 +40,18 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         user_service = UserService(User)
+      
+
         try:
             user = user_service.create_user(serializer)
-            tokens = user_service.generate_token(user)
+            print(user)
+
             return Response({
                 'user': UserSerializer(user).data,
-                'access': tokens['access'],
-                'refresh': tokens['refresh'],
+              
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['post'], serializer_class=LoginSerializer)
-    def login(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # Extrai credenciais do serializer validado
-        username = serializer.validated_data['username']
-        password = serializer.validated_data['password']
-
-        user_service = UserService(User)
-        try:
-            user = user_service.authenticate_user(username, password)
-            tokens = user_service.generate_token(user)
-            return Response({
-                'user': UserSerializer(user).data,
-                'access': tokens['access'],
-                'refresh': tokens['refresh'],
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
