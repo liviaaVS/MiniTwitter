@@ -40,7 +40,7 @@ jobs:
       - name: Run migrations
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
-          SECRET_KEY: ${SECRET_KEY}
+          SECRET_KEY: ${DJANGO_SECRET_KEY}
           DB_HOST: localhost
           DB_NAME: postgres
           DB_USER: postgres
