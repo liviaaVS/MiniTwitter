@@ -17,6 +17,9 @@ class User(AbstractUser):
         help_text='Specific permissions for this user.',
         related_query_name='custom_user',
     )
+    
+    picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+
     followers = models.IntegerField(default=0, blank=True, null=True)
     
     @property
