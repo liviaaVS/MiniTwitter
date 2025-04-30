@@ -55,8 +55,5 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
-          echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
 
           python manage.py test
