@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'cacatalks.wsgi.application'
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql',
-         'NAME': os.getenv('DATABASE_NAME', 'cacatalks'),
+         'NAME': os.getenv('DATABASE_NAME', 'postgres'),
          'USER': os.getenv('DATABASE_USERNAME', 'postgres'),
          'PASSWORD': os.getenv('DATABASE_PASSWORD', 'postgres'),
-         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+         'HOST': os.getenv('DATABASE_HOST', 'postgres'),
          'PORT': os.getenv('DATABASE_PORT', 5432),
      }
 }
