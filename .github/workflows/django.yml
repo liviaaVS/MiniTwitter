@@ -41,7 +41,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_HOST: db
+          DB_HOST: postgres   # <- corrigido
           DB_NAME: postgres
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -52,7 +52,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_HOST: localhost
+          DB_HOST: postgres  
           DB_NAME: postgres
           DB_USER: postgres
           DB_PASSWORD: postgres
