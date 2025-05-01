@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from datetime import timedelta
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 from pathlib import Path
 
@@ -86,13 +89,13 @@ DATABASES = {
          'ENGINE': 'django.db.backends.{}'.format(
              os.getenv('DATABASE_ENGINE', 'sqlite3')
          ),
-         'NAME': os.getenv('DATABASE_NAME', 'polls'),
-         'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
-         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
+         'NAME': os.getenv('DATABASE_NAME', 'cacatalks'),
+         'USER': os.getenv('DATABASE_USERNAME', 'postgres'),
+         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'postgres'),
+         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
          'PORT': os.getenv('DATABASE_PORT', 5432),
      }
- }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

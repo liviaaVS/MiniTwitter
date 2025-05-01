@@ -40,7 +40,7 @@ jobs:
       - name: Run migrations
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
-          SECRET_KEY: ${SECRET_KEY}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DB_HOST: localhost
           DB_NAME: postgres
           DB_USER: postgres
@@ -51,10 +51,10 @@ jobs:
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DB_HOST: localhost
-          DB_NAME: test_db
+          DB_NAME: postgres
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
-
           python manage.py test
