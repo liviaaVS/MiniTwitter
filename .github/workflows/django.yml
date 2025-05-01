@@ -16,7 +16,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_DB: github_actions
         ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready
@@ -37,12 +37,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h postgres -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 2
+          done
+          
       - name: Run migrations
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_HOST: postgres   # <- corrigido
-          DB_NAME: postgres
+          DB_HOST: postgres
+          DB_NAME: github_actions
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
@@ -52,8 +59,8 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_HOST: postgres  
-          DB_NAME: postgres
+          DB_HOST: postgres
+          DB_NAME: github_actions
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
