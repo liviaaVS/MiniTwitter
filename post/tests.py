@@ -8,7 +8,7 @@ import tempfile
 from django.test import override_settings
 from django.conf import settings
 
-from user.models import User  # Alterei aqui para usar django.conf
+from user.models import User 
 
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class PostTests(TestCase):
@@ -43,7 +43,7 @@ class PostTests(TestCase):
             title="Test Post",
             content="This is a test post.",
             date_created=timezone.now(),
-            author_id=1,
+            author=self.user,
             image=self.test_image,  # Corrigido aqui (adicionado self.)
             count_likes=0,
         )
@@ -52,5 +52,5 @@ class PostTests(TestCase):
         self.assertEqual(self.post.title, "Test Post")
         self.assertEqual(self.post.content, "This is a test post.")
         self.assertIsInstance(self.post.date_created, datetime.datetime)
-        self.assertEqual(self.post.author_id, 1)
+        self.assertEqual(self.post.author_id, self.user.id)
        
