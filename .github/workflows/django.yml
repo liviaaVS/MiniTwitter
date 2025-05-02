@@ -46,7 +46,7 @@ jobs:
 
       - name: Run tests
         env:
-          DJANGO_SETTINGS_MODULE: backend.cacatalks.settings
+          DJANGO_SETTINGS_MODULE: cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
           cd backend
