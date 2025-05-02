@@ -31,6 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -40,6 +41,7 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DATABASE_URL: postgres://postgres:postgres@postgres:5432/github_actions
         run: |
+          cd backend
           python manage.py migrate
 
       - name: Run tests
@@ -47,4 +49,5 @@ jobs:
           DJANGO_SETTINGS_MODULE: backend.cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
+          cd backend
           python manage.py test
