@@ -13,11 +13,11 @@ class FollowService:
             raise ValueError("You are already following this user.")
     
 
-        self.follow_model(
+        instance = self.follow_model(
             follower_id=follower_id,
             following_id=followed_id
         )
-        self.follow_model.save()
+        instance.save()
 
 
     def unfollow_user(self, follower_id, followed_id):
