@@ -3,8 +3,9 @@ from drf_yasg import openapi
 from rest_framework import viewsets
 from rest_framework.permissions import  AllowAny
 from post.models import Post
-from post.serializers import PostSerializer
+from post.serializers import ListPostSerializer, PostSerializer
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 
@@ -17,6 +18,13 @@ class PostViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
 
 
+    def get_serializer(self, *args, **kwargs):
+        if(self.action in ['list', 'retrieve']):
+            self.serializer_class = ListPostSerializer
+        if(self.action == 'liked_post'):
+            return None
+
+        return super().get_serializer(*args, **kwargs)
     
     @swagger_auto_schema(
         manual_parameters=[
@@ -30,12 +38,12 @@ class PostViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
     
-
     # Action customizada para "curtir" um post
-    @swagger_auto_schema(auto_schema=None)
-    @action(detail=True, methods=['patch'])
+    @action(detail=True, methods=['post'], )
     def liked_post(self, request, pk=None):
-        post_service = PostService()
-        post_service.liked_post(self.get_object())
-        return Response({'status': 'like added'}, status=status.HTTP_200_OK)
-  
+        post_service = PostService(Post.objects.get(pk=pk))
+        likes = post_service.liked_post()
+        return Response({'status': 'like added',
+                         'count_likes': likes}, status=status.HTTP_200_OK)
+
+    

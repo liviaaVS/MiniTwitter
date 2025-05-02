@@ -13,3 +13,8 @@ class FollowViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)  # Automatically set the follower to the logged-in user
     
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Follow.objects.filter(follower=user)
+        return Follow.objects.none()

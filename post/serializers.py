@@ -7,7 +7,6 @@ class ListPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
-        read_only_fields = ['id', 'date_created']
 
 
 class PostSerializer(serializers.ModelSerializer):
