@@ -9,7 +9,7 @@ class FollowService:
         if(follower_id == followed_id):
             raise ValueError("You cannot follow yourself.")
         
-        if self.follow_model.objects.filter(follower_id=follower_id, following_id=followed_id).exists():
+        if self.follow_model.objects.filter(follower_id=follower_id, followed_id=followed_id).exists():
             raise ValueError("You are already following this user.")
     
 
