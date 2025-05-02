@@ -51,3 +51,9 @@ DATABASE_PASSWORD=postgres
 DATABASE_HOST=db
 DATABASE_PORT=5432
 ```
+
+# finalizer operação de seguidores
+# adicionar modelo de curtida nos posts 
+# fazer login no frontend
+# fazer o resto das telas dia 03
+# fazer documentação dia 04 e entregar tbm

@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import (
 )
 from post.urls import posts_urls
 from user.urls import users_urls
+from follow.urls import follow_urls
 
 # Definindo a visualização do esquema Swagger
 schema_view = get_schema_view(
@@ -34,6 +35,7 @@ api_urls = [
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint para refresh token
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Endpoint para verificar token
     path('', include(posts_urls)),  # Inclui URLs dos posts
+    path('', include(follow_urls)),  # Inclui URLs de seguidores
 ]
 
 # URLs principais do projeto

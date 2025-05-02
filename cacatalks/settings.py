@@ -157,7 +157,13 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    # Feat pagination anywhere 
+    # https://www.django-rest-framework.org/api-guide/pagination/
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+
+    'PAGE_SIZE': 10, # limit default 10 items per page
 }
 
 SWAGGER_SETTINGS = {
@@ -224,3 +230,5 @@ SIMPLE_JWT = {
 }
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
+
+
