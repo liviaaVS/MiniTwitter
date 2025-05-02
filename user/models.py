@@ -28,7 +28,11 @@ class User(AbstractUser):
 
     @property
     def follower_count(self):
-        return self.followers_set.count()
+        return self.follower.count()
+    
+    @property
+    def following_count(self):
+        return self.following.count()
     
     class Meta:
         verbose_name = 'User'
