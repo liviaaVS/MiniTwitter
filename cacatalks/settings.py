@@ -85,15 +85,17 @@ WSGI_APPLICATION = 'cacatalks.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'github_actions',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
+     'default': {
+         'ENGINE': 'django.db.backends.{}'.format(
+             os.getenv('DATABASE_ENGINE', 'sqlite3')
+         ),
+         'NAME': os.getenv('DATABASE_NAME', 'cacadb'),
+         'USER': os.getenv('DATABASE_USERNAME', 'postgres'),
+         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'postgres'),
+         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
+         'PORT': os.getenv('DATABASE_PORT', 5432),
+     }
+ }
 
 if os.environ.get('GITHUB_WORKFLOW'):
     DATABASES = {

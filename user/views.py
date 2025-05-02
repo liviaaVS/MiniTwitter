@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
         - list/retrieve: autenticado
         - demais (update, destroy): admin
         """
-        if self.action in ['create', 'login', 'list']:
+        if self.action in ['create', 'list']:
             perms = [AllowAny]
         elif self.action in [ 'retrieve']:
             perms = [IsAuthenticated]
@@ -40,7 +40,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         user_service = UserService(User)
-      
 
         try:
             user = user_service.create_user(serializer)

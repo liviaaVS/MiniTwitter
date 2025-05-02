@@ -1,22 +1,7 @@
-"""
-URL configuration for cacatalks project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.urls import include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -28,7 +13,7 @@ from rest_framework_simplejwt.views import (
 from post.urls import posts_urls
 from user.urls import users_urls
 
-
+# Definindo a visualização do esquema Swagger
 schema_view = get_schema_view(
     openapi.Info(
         title="API Documentation",
@@ -39,27 +24,22 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
-
+    permission_classes=(permissions.AllowAny,),  # Permite o acesso público
 )
 
-
-
+# URLs relacionadas à API de autenticação e usuários
 api_urls = [
-    path('', include(users_urls)),
-    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('', include(posts_urls)),
-
-
-
+    path('', include(users_urls)),  # Inclui URLs de usuários
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint para obter token
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint para refresh token
+    path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Endpoint para verificar token
+    path('', include(posts_urls)),  # Inclui URLs dos posts
 ]
 
+# URLs principais do projeto
 urlpatterns = [
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('admin/', admin.site.urls),
-    path('api/v1/', include(api_urls)),
-]
-
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # Swagger UI
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),  # Redoc UI
+    path('admin/', admin.site.urls),  # Admin do Django
+    path('api/v1/', include(api_urls)),  # Endpoints da API
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Serve arquivos de mídia no modo de desenvolvimento

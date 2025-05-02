@@ -7,4 +7,5 @@ router.register(r'posts', PostViewSet, basename='post')
 
 app_name = "Posts"
 
-posts_urls = [] + router.urls
+posts_urls = [
+] + router.urls 
