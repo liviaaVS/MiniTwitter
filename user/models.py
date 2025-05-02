@@ -25,10 +25,10 @@ class User(AbstractUser):
         verbose_name='Profile Picture'
     )
     
-    followers = models.PositiveIntegerField(
-        default=0,
-        verbose_name='Total Followers'
-    )
+
+    @property
+    def follower_count(self):
+        return self.followers_set.count()
     
     class Meta:
         verbose_name = 'User'

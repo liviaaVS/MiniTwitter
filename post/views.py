@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 
+from post.services import PostService
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -33,8 +35,7 @@ class PostViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(auto_schema=None)
     @action(detail=True, methods=['patch'])
     def liked_post(self, request, pk=None):
-        post = self.get_object()  # Usa o pk da URL
-        post.increment_likes()
-        post.save()
+        post_service = PostService()
+        post_service.liked_post(self.get_object())
         return Response({'status': 'like added'}, status=status.HTTP_200_OK)
   
