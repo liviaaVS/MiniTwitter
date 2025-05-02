@@ -22,7 +22,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - 8080:80
-   
   django-web:
     build: .
     container_name: django-docker
@@ -30,6 +29,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    volumes:
+      - .:/app # <-- sincroniza o diretório atual com o /app no container
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DEBUG: ${DEBUG}
@@ -38,20 +39,19 @@ services:
       DATABASE_ENGINE: ${DATABASE_ENGINE}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
-
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
-
     command: >
       bash -c "
-        python manage.py makemigrations  &&
+        python manage.py makemigrations &&
         python manage.py migrate &&
         python manage.py runserver 0.0.0.0:8000
-
       "
     env_file:
       - .env
 
 volumes:
   postgres_data:
+  app-sync:
+    external: true
