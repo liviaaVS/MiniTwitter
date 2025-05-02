@@ -49,5 +49,5 @@ jobs:
           DJANGO_SETTINGS_MODULE: backend.cacatalks.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
-          ls
+          cd backend
           python manage.py test
