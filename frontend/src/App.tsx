@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import authService from "./auth/service/authService";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import LanePage from "./pages/lanePage";
 
-function App() {
-  const [count, setCount] = useState(0)
+export function App() {
+	const [isAuthenticatedState, setIsAuthenticatedState] = useState<
+		boolean | null
+	>(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	// Função assíncrona para verificar autenticação
+	const checkAuth = async () => {
+		const isAuthenticatedResult = await authService.profile();
+		setIsAuthenticatedState(isAuthenticatedResult);
+	};
+
+	// Verifica a autenticação assim que o componente é montado
+	useEffect(() => {
+		checkAuth();
+		console.log(isAuthenticatedState);
+	}, []);
+
+	// Enquanto estamos verificando a autenticação, mostramos um carregando
+	if (isAuthenticatedState === null) {
+		return <div>Loading...</div>;
+	}
+
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route
+					path="/"
+					element={<LanePage />}
+				/>
+
+				<Route
+					path="/login"
+					element={
+						isAuthenticatedState ? (
+							<Navigate to="/home" />
+						) : (
+							<LanePage />
+						)
+					}
+				/>
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
-export default App
+export default App;
