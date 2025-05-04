@@ -7,7 +7,7 @@ export async function isAuthenticated(): Promise<boolean> {
 	("Verificando autenticação...");
 	try {
 		const result = await authService.profile();
-		return result; // Espera um booleano da API (true ou false)
+		return !!result; // Converte o resultado para um booleano (true ou false)
 	} catch (error) {
 		console.error("Erro ao verificar autenticação", error);
 		return false;
