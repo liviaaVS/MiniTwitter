@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import LanePage from "./pages/lanePage";
+import HomePage from "./pages/home";
+import { UserProvider, useUser } from "./auth/service/user.tsx";
+import Login from "./pages/lanePage/login/index.tsx";
+import Register from "./pages/lanePage/register/index.tsx";
+import Feed from "./pages/home/feed/index.tsx";
+import Welcome from "./pages/lanePage/home/index.tsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppRoutes() {
+	const { userActive } = useUser();
+	const isAuthenticated = !!userActive;
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	return (
+		<Routes>
+			<Route
+				path="/"
+				element={<LanePage />}
+			>
+				<Route
+					index
+					element={<Welcome />}
+				/>
+				<Route
+					path="/login"
+					element={
+						isAuthenticated ? <Navigate to="/home" /> : <Login />
+					}
+				/>
+				<Route
+					path="/register"
+					element={<Register />}
+				/>
+			</Route>
+
+			<Route
+				path="/home"
+				element={
+					isAuthenticated ? <HomePage /> : <Navigate to="/login" />
+				}
+			>
+				<Route
+					index
+					element={<Feed />}
+				/>
+			</Route>
+		</Routes>
+	);
 }
 
-export default App
+export function App() {
+	return (
+		<UserProvider>
+			<BrowserRouter>
+				<AppRoutes />
+			</BrowserRouter>
+		</UserProvider>
+	);
+}
+
+export default App;

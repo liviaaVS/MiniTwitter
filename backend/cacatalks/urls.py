@@ -10,6 +10,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from user.views import UserProfileView
 from post.urls import posts_urls
 from user.urls import users_urls
 from follow.urls import follow_urls
@@ -34,6 +35,7 @@ api_urls = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint para obter token
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint para refresh token
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Endpoint para verificar token
+    path("auth/token/profile/", UserProfileView.as_view(), name="user_profile"),
     path('', include(posts_urls)),  # Inclui URLs dos posts
     path('', include(follow_urls)),  # Inclui URLs de seguidores
 ]

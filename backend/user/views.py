@@ -1,12 +1,31 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from rest_framework.decorators import action
-
+from rest_framework.views import APIView
 from user.models import User
 from user.serializer import UserSerializer, UserCreateSerializer
 from user.services import UserService
+from rest_framework_simplejwt.views import TokenVerifyView
+from rest_framework_simplejwt.tokens import AccessToken
 
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'profile_picture': user.picture.url if user.picture else None,
+            'is_active': user.is_active,
+            'is_staff': user.is_staff,
+            'is_superuser': user.is_superuser,
+            'followers': user.follower_count,  # ou sem parênteses se for propriedade
+            'following': user.following_count,
+        })
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -36,6 +55,13 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             perms = [IsAdminUser]
         return [p() for p in perms]
+    
+    def get_authenticators(self):
+        if self.request.method == 'POST':
+            return []  # ignora autenticação para criação de usuário
+        return super().get_authenticators()
+
+
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
