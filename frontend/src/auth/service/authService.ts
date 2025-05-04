@@ -42,25 +42,25 @@ class AuthService extends BaseService {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			
-			if(error.response.status === 401) {
+			if (error.response?.status === 401) {
 				return {
 					sucesso: false,
 					mensagem: "Invalid username or password.",
 				};
 			}
-			if(error.response.status  === 403) {
+			if (error.response?.status === 403) {
 				return {
 					sucesso: false,
 					mensagem: "User is not active.",
 				};
 			}
-			if(error.response.status  === 404) {
+			if (error.response?.status === 404) {
 				return {
 					sucesso: false,
 					mensagem: "User not found.",
 				};
 			}
-			if(error.response.status  === 500) {
+			if (error.response?.status === 500) {
 				return {
 					sucesso: false,
 					mensagem: "Server error.",
