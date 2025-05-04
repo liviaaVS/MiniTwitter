@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { JSX, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sleep } from "../../../utils"; // Função de espera para simular carregamento
 import { Button } from "../../../componentes/button";
@@ -23,7 +23,7 @@ const schema = yup.object().shape({
 		.required("Senha obrigatória"),
 });
 
-export default function Register(): JSX.Element {
+export default function Register() {
 	const navigate = useNavigate(); // Hook para navegação
 
 	const {

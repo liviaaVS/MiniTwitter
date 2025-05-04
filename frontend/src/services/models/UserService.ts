@@ -1,4 +1,4 @@
-import { RegisterFormData } from "../../pages/lanePage/RegisterForm";
+import { RegisterFormData } from "../../pages/lanePage/register";
 import BaseService from "../base/baseService";
 
 class UserService extends BaseService {

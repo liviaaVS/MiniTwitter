@@ -87,12 +87,12 @@ export default function NavBar(props: { isLanePage: boolean }): JSX.Element {
 			</div>
 			{/* mobile navigation */}
 			<div
-				className={`fixed z-40 w-full flex flex-col lg:hidden gap-12 origin-top duration-700 ${
-					!toggleMenu ? "h-0" : "h-full"
+				className={`fixed z-40 flex w-3/4 flex-col lg:hidden gap-12 origin-top duration-500 transition-all ${
+					toggleMenu ? "h-full  " : "h-0 overflow-hidden"
 				}`}
 			>
 				<div className="px-8 p-4 mx-4 transp2 ">
-					<div className="flex flex-col gap-8 justify-start ">
+					<div className="flex flex-col gap-8 justify-end">
 						{!isLanePage ? (
 							<>
 								<a href="/profile">Profile</a>
