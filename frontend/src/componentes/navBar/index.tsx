@@ -2,10 +2,18 @@ import { JSX } from "react";
 import cacatua from "../../assets/cacatua.svg";
 import { useState } from "react";
 import { MoonIcon, SunIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
-export default function NavBar(): JSX.Element {
+export default function NavBar(props: { autenticado: boolean }): JSX.Element {
 	const [toggleMenu, setToggleMenu] = useState(false);
-
+	const { autenticado } = props;
+	const navigate = useNavigate();
+	function handleLogout(): void {
+		localStorage.removeItem("access_token");
+		localStorage.removeItem("refresh_token");
+		localStorage.removeItem("user");
+		navigate("/login");
+	}
 	return (
 		<nav>
 			<div className="max-w-7xl mx-auto">
@@ -27,16 +35,25 @@ export default function NavBar(): JSX.Element {
 							</a>
 						</div>
 						{/* primary */}
-						<div className="hidden lg:flex gap-8 ">
-							<a
-								href="#"
-								className=""
-							>
-								Home
-							</a>
-							<a href="#">Benefits</a>
-							<a href="#">Our Classes</a>
-							<a href="#">Contact Us</a>
+						<div className="hidden lg:flex gap-8 items-center mt-2">
+							{autenticado ? (
+								<>
+									<a href="/profile">Profile</a>
+									<a href="/feed">Feed</a>
+								</>
+							) : (
+								<>
+									<a
+										href="#"
+										className=""
+									>
+										Home
+									</a>
+									<a href="#">Benefits</a>
+									<a href="#">Our Classes</a>
+									<a href="#">Contact Us</a>
+								</>
+							)}
 						</div>
 					</div>
 					{/* secondary */}
@@ -47,8 +64,19 @@ export default function NavBar(): JSX.Element {
 								<SunIcon className="h-6 w-6" />
 							</div>
 							<div>
-								<button className="rounded-full border-solid border-2 border-gray-300 py-2 px-4 hover:bg-gray-700 hover:text-gray-100">
-									Free Trial
+								<button
+									onClick={() => {
+										if (autenticado) {
+											console.log("Logout");
+											handleLogout();
+											navigate("/login");
+										} else {
+											navigate("/login");
+										}
+									}}
+									className="rounded-full border-solid border-2 border-gray-300 py-2 px-4 hover:bg-gray-700 hover:text-gray-100"
+								>
+									{autenticado ? "Logout" : "Login"}
 								</button>
 							</div>
 						</div>
@@ -69,10 +97,24 @@ export default function NavBar(): JSX.Element {
 			>
 				<div className="px-8 p-4 mx-4 transp2 ">
 					<div className="flex flex-col gap-8 justify-start ">
-						<a href="#">Home</a>
-						<a href="#">Benefits</a>
-						<a href="#">Our Classes</a>
-						<a href="#">Contact Us</a>
+						{autenticado ? (
+							<>
+								<a href="/profile">Profile</a>
+								<a href="/feed">Feed</a>
+							</>
+						) : (
+							<>
+								<a
+									href="#"
+									className=""
+								>
+									Home
+								</a>
+								<a href="#">Benefits</a>
+								<a href="#">Our Classes</a>
+								<a href="#">Contact Us</a>
+							</>
+						)}
 					</div>
 				</div>
 			</div>

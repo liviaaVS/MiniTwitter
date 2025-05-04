@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { JSX } from "react";
-
+import { JSX, useState } from "react";
+import authService from "../../../auth/service/authService";
+import { useNavigate } from "react-router-dom";
+import { sleep } from "../../../utils"; // Função de espera para simular carregamento
 interface FormData {
 	username: string;
 	password: string;
@@ -18,6 +20,8 @@ const schema = yup.object().shape({
 });
 
 export default function Login(): JSX.Element {
+	const navigate = useNavigate(); // Hook para navegação
+
 	const {
 		register,
 		handleSubmit,
@@ -25,17 +29,35 @@ export default function Login(): JSX.Element {
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
+	const [message, setMessage] = useState<{ detail: string; color: string }>(
+		{} as { detail: string; color: string },
+	);
 
 	async function onSubmit(data: FormData): Promise<void> {
-		console.log("Enviando dados fictícios:", data);
-		await new Promise((resolve) => setTimeout(resolve, 2000)); // simula delay
-		alert("Login simulado com sucesso!");
+		await authService
+			.loginAuth(data)
+			.then(async (response): Promise<void> => {
+				if (response.sucesso) {
+					setMessage({
+						detail: "Login realizado com sucesso!",
+						color: "green-500",
+					});
+					await sleep(1000);
+					navigate("/home");
+				} else {
+					setMessage({
+						detail: response.mensagem,
+						color: "red-500",
+					});
+				}
+			});
 	}
 
 	return (
 		<>
 			{/* Formulário de login (lado direito) */}
 			<div className="w-full flex items-center justify-center max-w-sm">
+				{/* Formulário de login */}
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="w-full max-w-sm transp p-8 rounded-lg shadow-lg space-y-6"
@@ -44,6 +66,11 @@ export default function Login(): JSX.Element {
 						Hi! Good to see you{" "}
 						<span className="text-violet-600">again</span> 🐦
 					</h2>
+					<p
+						className={`text-sm text-center w-full ${message.color} font-semibold mt-4`}
+					>
+						{message.detail}
+					</p>
 					<div>
 						<label className="block mb-1 text-sm font-medium">
 							Username
@@ -79,6 +106,12 @@ export default function Login(): JSX.Element {
 					<button
 						type="submit"
 						disabled={isSubmitting}
+						className="w-full bg-violet-600 text-white py-2 rounded-md hover:bg-violet-700 transition"
+					>
+						{isSubmitting ? "Logging in..." : "Log in"}
+					</button>
+					<button
+						type="button"
 						className="w-full bg-violet-600 text-white py-2 rounded-md hover:bg-violet-700 transition"
 					>
 						{isSubmitting ? "Logging in..." : "Log in"}

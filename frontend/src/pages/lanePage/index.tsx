@@ -16,19 +16,21 @@ export default function LanePage(): JSX.Element {
 	}
 	return (
 		<>
-			<div className="app container mx-auto">
-				<NavBar />
-				<div className="flex mx-auto w-5/6  flex items-center justify-center">
-					{/* Banner (lado esquerdo) */}
-					<div className="w-1/2 hidden md:block">
-						<img
-							src={banner}
-							alt="Banner"
-						/>
-					</div>
-					{/* Conteúdo condicional (lado direito) */}
-					<div className="w-full md:w-1/2 flex justify-center">
-						{content}
+			<div className="backgroundGradient">
+				<div className="container mx-auto ">
+					<NavBar autenticado={false} />
+					<div className="flex mx-auto w-5/6  flex items-center justify-center">
+						{/* Banner (lado esquerdo) */}
+						<div className="w-1/2 hidden md:block">
+							<img
+								src={banner}
+								alt="Banner"
+							/>
+						</div>
+						{/* Conteúdo condicional (lado direito) */}
+						<div className="w-full md:w-1/2 flex justify-center">
+							{content}
+						</div>
 					</div>
 				</div>
 			</div>

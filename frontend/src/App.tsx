@@ -1,28 +1,12 @@
-import { useEffect, useState } from "react";
-import authService from "./auth/service/authService";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LanePage from "./pages/lanePage";
+import HomePage from "./pages/home";
 
 export function App() {
-	const [isAuthenticatedState, setIsAuthenticatedState] = useState<
-		boolean | null
-	>(null);
-
-	// Função assíncrona para verificar autenticação
-	const checkAuth = async () => {
-		const isAuthenticatedResult = await authService.profile();
-		setIsAuthenticatedState(isAuthenticatedResult);
-	};
-
-	// Verifica a autenticação assim que o componente é montado
-	useEffect(() => {
-		checkAuth();
-		console.log(isAuthenticatedState);
-	}, []);
-
-	// Enquanto estamos verificando a autenticação, mostramos um carregando
-	if (isAuthenticatedState === null) {
-		return <div>Loading...</div>;
+	function isAuthenticatedState(): boolean {
+		const accessToken = localStorage.getItem("access_token");
+		const refreshToken = localStorage.getItem("refresh_token");
+		return !!accessToken && !!refreshToken;
 	}
 
 	return (
@@ -36,10 +20,21 @@ export function App() {
 				<Route
 					path="/login"
 					element={
-						isAuthenticatedState ? (
+						isAuthenticatedState() ? (
 							<Navigate to="/home" />
 						) : (
 							<LanePage />
+						)
+					}
+				/>
+
+				<Route
+					path="/home"
+					element={
+						isAuthenticatedState() ? (
+							<HomePage />
+						) : (
+							<Navigate to="/login" />
 						)
 					}
 				/>

@@ -10,9 +10,18 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0 auto;
-    background-color: #1b1b1f00;
-    background: radial-gradient(142.33% 142.33% at 50% -42.33%, #1B1B1F 43.75%, #35005D 79.33%);
 }
+
+
+.backgroundSolid{
+    background-color: #1b1b1f;
+}
+.backgroundGradient {
+    background-color: #1b1b1f00;
+    background: linear-gradient(180deg, #1B1B1F 0%, #35005D 100%);
+}
+
+
 .transp{
     border-radius: 30px;
     border: 1px solid rgba(29, 0, 56, 0.00);
