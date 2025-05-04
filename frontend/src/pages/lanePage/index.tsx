@@ -19,7 +19,7 @@ export default function LanePage(): JSX.Element {
 		<>
 			<div className="backgroundGradient ">
 				<div className="container mx-auto pb-10 overflow-x-hidden">
-					<NavBar autenticado={false} />
+					<NavBar isLanePage />
 					<div className="flex mx-auto w-5/6  flex items-center justify-center">
 						{/* Banner (lado esquerdo) */}
 						<div className="w-1/2 hidden md:block">

@@ -4,11 +4,11 @@ import { MoonIcon, SunIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../auth/service/user.tsx";
 
-export default function NavBar(): JSX.Element {
+export default function NavBar(props: { isLanePage: boolean }): JSX.Element {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const navigate = useNavigate();
 	const { userActive, setUserActive } = useUser();
-
+	const { isLanePage } = props;
 	const isAuthenticated = !!userActive;
 
 	function handleLogout(): void {
@@ -39,7 +39,7 @@ export default function NavBar(): JSX.Element {
 							</a>
 						</div>
 						<div className="hidden lg:flex gap-8 items-center mt-2">
-							{isAuthenticated ? (
+							{!isLanePage ? (
 								<>
 									<a href="/profile">Profile</a>
 									<a href="/feed">Feed</a>
@@ -93,7 +93,7 @@ export default function NavBar(): JSX.Element {
 			>
 				<div className="px-8 p-4 mx-4 transp2 ">
 					<div className="flex flex-col gap-8 justify-start ">
-						{isAuthenticated ? (
+						{!isLanePage ? (
 							<>
 								<a href="/profile">Profile</a>
 								<a href="/feed">Feed</a>

@@ -5,7 +5,7 @@ export default function HomePage() {
 		<>
 			<div className="backgroundSolid h-screen">
 				<div className="container mx-auto">
-					<NavBar autenticado={true} />
+					<NavBar isLanePage={false} />
 				</div>
 			</div>
 		</>
