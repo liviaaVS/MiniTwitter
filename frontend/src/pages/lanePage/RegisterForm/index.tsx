@@ -2,19 +2,20 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { JSX, useState } from "react";
-import authService from "../../../auth/service/authService";
 import { useNavigate } from "react-router-dom";
 import { sleep } from "../../../utils"; // Função de espera para simular carregamento
 import { Button } from "../../../componentes/button";
-import { MoonIcon } from "@heroicons/react/24/outline";
-import { useUser } from "../../../auth/service/user";
-interface FormData {
+import UserService from "../../../services/models/UserService";
+
+export interface RegisterFormData {
+	email: string;
 	username: string;
 	password: string;
 }
 
 // Esquema de validação com yup
 const schema = yup.object().shape({
+	email: yup.string().email("Email inválido").required("Email obrigatório"),
 	username: yup.string().required("O nome de usuário é obrigatório"),
 	password: yup
 		.string()
@@ -22,9 +23,9 @@ const schema = yup.object().shape({
 		.required("Senha obrigatória"),
 });
 
-export default function Login(): JSX.Element {
+export default function Register(): JSX.Element {
 	const navigate = useNavigate(); // Hook para navegação
-	const { setUserActive } = useUser(); // Função para definir o usuário ativo
+
 	const {
 		register,
 		handleSubmit,
@@ -36,46 +37,59 @@ export default function Login(): JSX.Element {
 		{} as { detail: string; color: string },
 	);
 
-	async function onSubmit(data: FormData): Promise<void> {
-		await authService
-			.loginAuth(data)
-			.then(async (response): Promise<void> => {
-				if (response.sucesso && response.usuario) {
-					setMessage({
-						detail: "Login realizado com sucesso!",
-						color: "green-500",
-					});
-					// Armazenar o usuário ativo no contexto
-					setUserActive(response.usuario);
-					await sleep(1000);
-					navigate("/home");
-				} else {
-					setMessage({
-						detail: response.mensagem,
-						color: "red-500",
-					});
-				}
+	async function onSubmit(data: RegisterFormData): Promise<void> {
+		await UserService.userRegister(data)
+			.then(() => {
+				setMessage({
+					detail: "Registro realizado com sucesso!",
+					color: "text-green-500",
+				});
+				sleep(1000);
+				navigate("/login");
+			})
+			.catch((errors) => {
+				setMessage({
+					detail: errors.response.data.mensagem,
+					color: "text-red-500",
+				});
+				sleep(1000);
 			});
 	}
 
 	return (
 		<>
-			{/* Formulário de login (lado direito) */}
+			{/* Formulário de registro de usuário (lado direito) */}
 			<div className="w-full flex items-center justify-center max-w-sm">
-				{/* Formulário de login */}
+				{/* Formulário de registro de usuário */}
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="w-full max-w-sm transp p-8 rounded-lg shadow-lg space-y-6"
 				>
 					<h2 className="text-2xl text-center">
-						Hi! Good to see you{" "}
-						<span className="text-violet-600">again</span> 🐦
+						Hi! Nice too meet you! 🐦
 					</h2>
+
 					<p
 						className={`text-sm text-center w-full ${message.color} font-semibold mt-4`}
 					>
 						{message.detail}
 					</p>
+					<div>
+						<label className="block mb-1 text-sm font-medium">
+							Email
+						</label>
+						<input
+							{...register("email")}
+							type="email"
+							placeholder="Enter your email..."
+							className="w-full bg-transparent px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+						/>
+						{errors.email && (
+							<p className="text-sm text-red-500 mt-1">
+								{errors.email.message}
+							</p>
+						)}
+					</div>
 					<div>
 						<label className="block mb-1 text-sm font-medium">
 							Username
@@ -108,22 +122,13 @@ export default function Login(): JSX.Element {
 							</p>
 						)}
 					</div>
-					<button
+					<Button
+						variant="primary"
 						type="submit"
 						disabled={isSubmitting}
-						className="w-full bg-violet-600 text-white py-2 rounded-md hover:bg-violet-700 transition"
-					>
-						{isSubmitting ? "Logging in..." : "Log in"}
-					</button>
-					<Button
-						variant="secondary"
-						icon={<MoonIcon className="h-5 w-5" />}
-						onClick={() => {
-							navigate("/register");
-						}}
 						className="w-full"
 					>
-						Sign up
+						{isSubmitting ? "Siging in..." : "Sign up"}
 					</Button>
 				</form>
 			</div>

@@ -1,45 +1,47 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LanePage from "./pages/lanePage";
 import HomePage from "./pages/home";
+import { UserProvider, useUser } from "./auth/service/user.tsx";
 
-export function App() {
-	function isAuthenticatedState(): boolean {
-		const accessToken = localStorage.getItem("access_token");
-		const refreshToken = localStorage.getItem("refresh_token");
-		return !!accessToken && !!refreshToken;
-	}
+function AppRoutes() {
+	const { userActive } = useUser();
+	const isAuthenticated = !!userActive;
 
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route
-					path="/"
-					element={<LanePage />}
-				/>
+		<Routes>
+			<Route
+				path="/"
+				element={<LanePage />}
+			/>
 
-				<Route
-					path="/login"
-					element={
-						isAuthenticatedState() ? (
-							<Navigate to="/home" />
-						) : (
-							<LanePage />
-						)
-					}
-				/>
+			<Route
+				path="/login"
+				element={
+					isAuthenticated ? <Navigate to="/home" /> : <LanePage />
+				}
+			/>
+			<Route
+				path="/register"
+				element={<LanePage />}
+			/>
 
-				<Route
-					path="/home"
-					element={
-						isAuthenticatedState() ? (
-							<HomePage />
-						) : (
-							<Navigate to="/login" />
-						)
-					}
-				/>
-			</Routes>
-		</BrowserRouter>
+			<Route
+				path="/home"
+				element={
+					isAuthenticated ? <HomePage /> : <Navigate to="/login" />
+				}
+			/>
+		</Routes>
+	);
+}
+
+export function App() {
+	return (
+		<UserProvider>
+			<BrowserRouter>
+				<AppRoutes />
+			</BrowserRouter>
+		</UserProvider>
 	);
 }
 

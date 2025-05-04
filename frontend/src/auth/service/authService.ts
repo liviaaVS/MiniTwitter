@@ -6,6 +6,7 @@ import { UserActive } from "./user";
 interface Mensagem {
 	sucesso: boolean;
 	mensagem: string ;
+	usuario?: UserActive | null;
 }
 
 class AuthService extends BaseService {
@@ -18,11 +19,16 @@ class AuthService extends BaseService {
 				localStorage.setItem("access_token", access);
 				localStorage.setItem("refresh_token", refresh);
 				// Buscar perfil
-				const userResponse = await axiosInstance.get("auth/token/profile/");
-				const userData = userResponse.data;
-
-				// Armazenar no localStorage e retornar
-				localStorage.setItem("user", JSON.stringify(userData));
+				const userData = await this.profile();
+				if (userData) {
+					localStorage.setItem("user", JSON.stringify(userData));
+					return {
+						sucesso: true,
+						mensagem: "Login realizado com sucesso!",
+						usuario: userData,
+					};
+				}
+				
 				return {
 					sucesso: true,
 					mensagem: "Login realizado com sucesso!",
@@ -86,24 +92,22 @@ class AuthService extends BaseService {
 		}
 	}
 
-	async profile(): Promise<boolean> {
+	async profile(): Promise<UserActive | null> {
 		const accessToken = localStorage.getItem("access_token");
-		if (!accessToken) return false;
-
+		if (!accessToken) return null;
+	
 		try {
-			const response = await axiosInstance.get(`${this.serviceUrl}/auth/profile/`, {
+			const response = await axiosInstance.get(`${this.serviceUrl}/auth/token/profile/`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-
-			const user: UserActive = response.data.data;
-			localStorage.setItem("user", JSON.stringify(user));
-			return true;
+			return response.data as UserActive;
 		} catch {
-			return false;
+			return null;
 		}
 	}
+	
 }
 
 export default new AuthService("");

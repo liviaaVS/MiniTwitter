@@ -1,26 +1,30 @@
-import { JSX } from "react";
+import { JSX, useState } from "react";
 import cacatua from "../../assets/cacatua.svg";
-import { useState } from "react";
 import { MoonIcon, SunIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../auth/service/user.tsx";
 
-export default function NavBar(props: { autenticado: boolean }): JSX.Element {
+export default function NavBar(): JSX.Element {
 	const [toggleMenu, setToggleMenu] = useState(false);
-	const { autenticado } = props;
 	const navigate = useNavigate();
+	const { userActive, setUserActive } = useUser();
+
+	const isAuthenticated = !!userActive;
+
 	function handleLogout(): void {
 		localStorage.removeItem("access_token");
 		localStorage.removeItem("refresh_token");
 		localStorage.removeItem("user");
+		setUserActive(null);
 		navigate("/login");
 	}
+
 	return (
 		<nav>
 			<div className="max-w-7xl mx-auto">
 				<div className="flex mx-auto justify-between w-5/6 ">
 					{/* Primary menu and logo */}
 					<div className="flex items-center gap-16 my-12">
-						{/* logo */}
 						<div>
 							<a
 								href="/"
@@ -34,21 +38,15 @@ export default function NavBar(props: { autenticado: boolean }): JSX.Element {
 								<span className="mt-2">Cacatalks</span>
 							</a>
 						</div>
-						{/* primary */}
 						<div className="hidden lg:flex gap-8 items-center mt-2">
-							{autenticado ? (
+							{isAuthenticated ? (
 								<>
 									<a href="/profile">Profile</a>
 									<a href="/feed">Feed</a>
 								</>
 							) : (
 								<>
-									<a
-										href="#"
-										className=""
-									>
-										Home
-									</a>
+									<a href="#">Home</a>
 									<a href="#">Benefits</a>
 									<a href="#">Our Classes</a>
 									<a href="#">Contact Us</a>
@@ -66,17 +64,15 @@ export default function NavBar(props: { autenticado: boolean }): JSX.Element {
 							<div>
 								<button
 									onClick={() => {
-										if (autenticado) {
-											console.log("Logout");
+										if (isAuthenticated) {
 											handleLogout();
-											navigate("/login");
 										} else {
 											navigate("/login");
 										}
 									}}
 									className="rounded-full border-solid border-2 border-gray-300 py-2 px-4 hover:bg-gray-700 hover:text-gray-100"
 								>
-									{autenticado ? "Logout" : "Login"}
+									{isAuthenticated ? "Logout" : "Login"}
 								</button>
 							</div>
 						</div>
@@ -91,25 +87,20 @@ export default function NavBar(props: { autenticado: boolean }): JSX.Element {
 			</div>
 			{/* mobile navigation */}
 			<div
-				className={`fixed z-40 w-full flex flex-col lg:hidden gap-12  origin-top duration-700 ${
+				className={`fixed z-40 w-full flex flex-col lg:hidden gap-12 origin-top duration-700 ${
 					!toggleMenu ? "h-0" : "h-full"
 				}`}
 			>
 				<div className="px-8 p-4 mx-4 transp2 ">
 					<div className="flex flex-col gap-8 justify-start ">
-						{autenticado ? (
+						{isAuthenticated ? (
 							<>
 								<a href="/profile">Profile</a>
 								<a href="/feed">Feed</a>
 							</>
 						) : (
 							<>
-								<a
-									href="#"
-									className=""
-								>
-									Home
-								</a>
+								<a href="#">Home</a>
 								<a href="#">Benefits</a>
 								<a href="#">Our Classes</a>
 								<a href="#">Contact Us</a>

@@ -23,12 +23,20 @@ interface UserContextProps {
 // Criando o contexto com valores padrão
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
-// Provider que envolve os componentes que precisam acessar o contexto
+// ... importações e interfaces iguais ...
+
 export function UserProvider({ children }: { children: React.ReactNode }) {
-	// Estado para o usuário ativo
 	const [userActive, setUserActive] = useState<UserActive | null>(() => {
 		const storedUser = localStorage.getItem("user");
-		return storedUser ? JSON.parse(storedUser) : null;
+		try {
+			return storedUser && storedUser !== "undefined"
+				? JSON.parse(storedUser)
+				: null;
+		} catch {
+			console.warn("Usuário no localStorage está corrompido. Resetando.");
+			localStorage.removeItem("user");
+			return null;
+		}
 	});
 
 	return (
