@@ -1,17 +1,25 @@
 import axiosInstance from "./axiosInstance";
 import { BaseFilter } from "../../filters/BaseFilter";
 
+export interface BaseGetAllResponse {
+	count: number;
+	next: string | null;
+	previous: string | null;
+	results: unknown[];
+}
+
+
 class BaseService {
 	serviceUrl: string = "http://localhost:8000/api/v1/"; 
 	constructor(serviceUrl: string) {
 		this.serviceUrl = serviceUrl;
 	}
 
-	async getAll(filters: BaseFilter): Promise<unknown> {
+	async getAll(filters?: BaseFilter): Promise<BaseGetAllResponse> {
 		const response = await axiosInstance.get(`${this.serviceUrl}/`, {
 			params: filters,
 		});
-		return response;
+		return response.data as BaseGetAllResponse;
 	}
 
 	async get(id: number, filters?: unknown): Promise<unknown> {

@@ -194,8 +194,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # Tempo mais seguro
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,  # Importante para segurança
-    "BLACKLIST_AFTER_ROTATION": True,  # Revoga tokens antigos
+    "ROTATE_REFRESH_TOKENS": False,  
+    "BLACKLIST_AFTER_ROTATION": False,  # Revoga tokens antigos
     "UPDATE_LAST_LOGIN": True,  # Atualiza último login
 
     "ALGORITHM": "HS256",

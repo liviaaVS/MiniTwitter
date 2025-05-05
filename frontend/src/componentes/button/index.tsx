@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline"; // Usando ArrowPathIcon para carregamento
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-	variant?: "primary" | "secondary" | "tertiary";
+	variant?: "primary" | "secondary" | "tertiary" | "tertiaryDark";
 	size?: "default" | "md" | "sm" | "circle";
 	icon?: ReactNode; // A prop icon pode ser usada para adicionar um ícone personalizado
 	isLoading?: boolean;
@@ -28,6 +28,8 @@ export function Button({
 			"border border-white text-white hover:bg-white hover:text-violet-600 focus:ring-white",
 		tertiary:
 			"bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-300",
+		tertiaryDark:
+			" text-gray-500 text-sm hover:bg-gray-700 hover:text-white",
 	};
 
 	const sizes: Record<string, string> = {

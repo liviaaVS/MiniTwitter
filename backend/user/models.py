@@ -34,6 +34,20 @@ class User(AbstractUser):
     def following_count(self):
         return self.following.count()
     
+    @property
+    def following_users(self):
+        """
+        Retorna uma QuerySet com os usuários que este usuário está seguindo.
+        """
+        return User.objects.filter(follower__follower=self)
+
+    @property
+    def follower_users(self):
+        """
+        Retorna uma QuerySet com os usuários que seguem este usuário.
+        """
+        return User.objects.filter(following__followed=self)
+
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'

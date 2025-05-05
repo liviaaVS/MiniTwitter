@@ -50,10 +50,9 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         if self.action in ['create', 'list']:
             perms = [AllowAny]
-        elif self.action in [ 'retrieve']:
+        else :
             perms = [IsAuthenticated]
-        else:
-            perms = [IsAdminUser]
+      
         return [p() for p in perms]
     
     def get_authenticators(self):

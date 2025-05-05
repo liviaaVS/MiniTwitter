@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from user.models import User
 from follow.models import Follow
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -18,3 +19,11 @@ class FollowSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You are already following this user.")
         
         return super().create(validated_data)
+
+
+class ListUserFollowSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'picture']
+        read_only_fields = ['id', 'date_created']
