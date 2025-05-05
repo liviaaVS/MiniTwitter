@@ -1,4 +1,4 @@
-import axiosInstance from "../../services/base/axiosInstance";
+import axiosInstance, { getRefreshToken } from "../../services/base/axiosInstance";
 import BaseService from "../../services/base/baseService";
 import { LoginSubmit } from "./auth";
 import { UserActive } from "./user";
@@ -75,7 +75,7 @@ class AuthService extends BaseService {
 	}
 
 	async refreshToken(): Promise<boolean> {
-		const refresh = localStorage.getItem("refresh_token");
+		const refresh = getRefreshToken();
 		if (!refresh) return false;
 
 		try {
